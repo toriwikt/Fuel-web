@@ -10,7 +10,13 @@ class Match3Game {
         this.score = 0;
         this.selectedTile = null;
         this.grid = [];
-        this.emojis = ['💧', '🌊', '🌿', '🧪', '⚗️']; // Эмодзи для каждого типа
+        this.images = [
+            'img/free-icon-diesel-2051302.png',
+            'img/free-icon-oil-barrel-3444163.png',
+            'img/free-icon-oil-barrel-4515613.png',
+            'img/free-icon-oil-2051338.png',
+            'img/free-icon-petroleum-4055245.png'
+        ];
         this.gameWon = false;
         this.initializeBoard();
     }
@@ -32,13 +38,19 @@ class Match3Game {
                 tile.dataset.type = type;
                 tile.dataset.row = i;
                 tile.dataset.col = j;
-                tile.innerHTML = this.emojis[type - 1]; // Добавляем эмодзи
+                const img = document.createElement('img');
+                img.src = this.images[type - 1];
+                img.style.width = '80%';
+                img.style.height = '80%';
+                tile.appendChild(img); 
                 
                 tile.addEventListener('click', () => this.handleTileClick(tile));
                 this.board.appendChild(tile);
             }
         }
     }
+
+    
 
     wouldCauseMatch(row, col, type) {
         // Проверка по горизонтали
@@ -92,8 +104,8 @@ class Match3Game {
         // Сохраняем оригинальные значения
         const type1 = this.grid[row1][col1];
         const type2 = this.grid[row2][col2];
-        const emoji1 = tile1.innerHTML;
-        const emoji2 = tile2.innerHTML;
+        const img1 = tile1.querySelector('img').src;
+        const img2 = tile2.querySelector('img').src;
         const dataType1 = tile1.dataset.type;
         const dataType2 = tile2.dataset.type;
 
@@ -103,9 +115,9 @@ class Match3Game {
 
         // Меняем местами в DOM
         tile1.dataset.type = dataType2;
-        tile1.innerHTML = emoji2;
+        tile1.querySelector('img').src = img2;
         tile2.dataset.type = dataType1;
-        tile2.innerHTML = emoji1;
+        tile2.querySelector('img').src = img1;
 
         // Проверяем, есть ли совпадения после свапа
         if (!this.checkForMatches()) {
@@ -120,9 +132,9 @@ class Match3Game {
             this.grid[row2][col2] = type2;
             
             tile1.dataset.type = dataType1;
-            tile1.innerHTML = emoji1;
+            tile1.innerHTML = img1;
             tile2.dataset.type = dataType2;
-            tile2.innerHTML = emoji2;
+            tile2.innerHTML = img2;
             
             // Убираем класс анимации
             tile1.classList.remove('invalid-move');
@@ -248,7 +260,12 @@ class Match3Game {
                 this.grid[row][col] = type;
                 const tile = this.board.children[row * this.boardSize + col];
                 tile.dataset.type = type;
-                tile.innerHTML = this.emojis[type - 1];
+                const img = document.createElement('img');
+                img.src = this.images[type - 1];
+                img.style.width = '80%';
+                img.style.height = '80%';
+                tile.innerHTML = ''; // Очищаємо старий вміст
+                tile.appendChild(img);
             }
         }
     }

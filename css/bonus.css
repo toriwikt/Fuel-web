@@ -92,11 +92,11 @@ body {
 }
 
 /* Стили для различных типов тайлов */
-.tile[data-type="1"] { background-color: #a80202; }
-.tile[data-type="2"] { background-color: #01335c; }
-.tile[data-type="3"] { background-color: #6b2400; }
-.tile[data-type="4"] { background-color: #9c7b05; }
-.tile[data-type="5"] { background-color: #4a085b; }
+.tile[data-type="1"] { background-color: #d90c0c; }
+.tile[data-type="2"] { background-color: #045fa9; }
+.tile[data-type="3"] { background-color: #d84f0a; }
+.tile[data-type="4"] { background-color: #e3a702; }
+.tile[data-type="5"] { background-color: #9c19bc; }
 
 /* Анимация исчезновения тайлов */
 @keyframes pop {
