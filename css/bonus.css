@@ -3,7 +3,7 @@ body {
     flex-direction: column;
     align-items: center;
     padding: 20px;
-    background-color: #f0f8ff;
+    background-color: #ffffff;
     font-family: Arial, sans-serif;
     min-height: 100vh;
     margin: 0;
@@ -91,14 +91,14 @@ body {
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
-/* Стили для различных типов тайлов */
+/* Стилі тайлів з гри */
 .tile[data-type="1"] { background-color: #d90c0c; }
 .tile[data-type="2"] { background-color: #045fa9; }
 .tile[data-type="3"] { background-color: #d84f0a; }
 .tile[data-type="4"] { background-color: #e3a702; }
 .tile[data-type="5"] { background-color: #9c19bc; }
 
-/* Анимация исчезновения тайлов */
+/* Анімація зникнення тайлів */
 @keyframes pop {
     0% { transform: scale(1); }
     50% { transform: scale(1.2); }
@@ -250,7 +250,7 @@ body {
 
 .game-title {
     text-align: center;
-    color: #3498db;
+    color: #361d00;
     font-size: 2.5em;
     text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
     margin: 20px 0;
@@ -261,11 +261,11 @@ body {
     right: 2px;
     top: 50%;
     transform: translateY(-50%);
-    background-color: rgba(255, 255, 255, 0.9);
+    background-color: #ffffffe6;
     padding: 15px;
     border-radius: 10px;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-    width: 230px;
+    width: 240px;
 }
 
 .game-instructions p {

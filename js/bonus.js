@@ -130,11 +130,24 @@ class Match3Game {
             // Возвращаем оригинальные значения
             this.grid[row1][col1] = type1;
             this.grid[row2][col2] = type2;
-            
+  
             tile1.dataset.type = dataType1;
-            tile1.querySelector('img').src = img1;
+            tile1.innerHTML = ''; 
+            tile2.innerHTML = '';
+            const imgElem1 = document.createElement('img');
+            imgElem1.src = img1;
+            imgElem1.style.width = '80%';
+            imgElem1.style.height = '80%';
+
             tile2.dataset.type = dataType2;
-            tile2.querySelector('img').src = img2;
+            const imgElem2 = document.createElement('img');
+            imgElem2.src = img2;
+            imgElem2.style.width = '80%';
+            imgElem2.style.height = '80%';
+
+            tile1.appendChild(imgElem1);
+            tile2.appendChild(imgElem2);
+
             
             // Убираем класс анимации
             tile1.classList.remove('invalid-move');

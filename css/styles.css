@@ -57,7 +57,7 @@ p {
 }
 
 button {
-    background-color: #e7c171;
+    background-color: #cea650;
     color: white;
     border: none;
     padding: 12px 25px;
@@ -68,5 +68,5 @@ button {
 }
 
 button:hover {
-    background-color: #c1b6a2;
+    background-color: #f9cc79;
 }
