@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Гра Match-3</title>
+    <link rel="stylesheet" href="./css/bonus.css">
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
+</head>
+<body>
+    <a href="index.html" class="back-button">
+        <span>Повернутися на головну</span>
+    </a>
+
+    <h1 class="game-title">Кристалічне паливо</h1>
+
+    <div id="game-container">
+        <div id="game-board"></div>
+        <div id="water-container">
+            <div id="water"></div>
+            <div id="clean-water"></div>
+        </div>
+    </div>
+
+    <div class="game-instructions">
+        <p>🎮 Збирайте три кристали в ряд</p>
+        <p>💧 Заправте авто до кінця</p>
+        <p>⭐ Більше комбо - більше очків</p>
+    </div>
+
+    <div id="score">Рахунок: <span id="score-value">0</span></div>
+
+    <div id="victory-screen">
+        <div class="victory-content">
+            <h2>🎉 Вітаємо! 🎉</h2>
+            <p>Ви успішно очистили всю воду! Ваш фінальний рахунок: <span id="final-score">0</span></p>
+            <div class="victory-buttons">
+                <button class="game-button play-again" onclick="location.reload()">
+                    🔄 Грати знову
+                </button>
+                <a href="index.html" class="game-button return-home">
+                    🏠 На головну
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <script src="./js/bonus.js"></script>
+</body>
+</html>
