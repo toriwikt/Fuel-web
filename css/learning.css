@@ -75,6 +75,11 @@ h1 {
     align-items: center;
 }
 
+.card-front img {
+    width: 4rem;
+    padding: 5px;
+}
+
 .card-back {
     background: #9B9485;
     color: white;
