@@ -132,9 +132,9 @@ class Match3Game {
             this.grid[row2][col2] = type2;
             
             tile1.dataset.type = dataType1;
-            tile1.innerHTML = img1;
+            tile1.querySelector('img').src = img1;
             tile2.dataset.type = dataType2;
-            tile2.innerHTML = img2;
+            tile2.querySelector('img').src = img2;
             
             // Убираем класс анимации
             tile1.classList.remove('invalid-move');
