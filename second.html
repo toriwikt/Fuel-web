@@ -1,0 +1,726 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Заправка транспорту</title>
+    <style>
+        :root {
+            --primary-color: #4CAF50;
+            --secondary-color: #2196F3;
+            --error-color: #F44336;
+            --success-color: #4CAF50;
+            --border-radius: 8px;
+        }
+        
+        * {
+            box-sizing: border-box;
+            font-family: 'Arial', sans-serif;
+        }
+        
+        body {
+            margin: 0;
+            padding: 20px;
+            background-color: #f5f5f5;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 15px;
+            width: 100%;
+        }
+        
+        .header h1 {
+            margin-bottom: 5px;
+            font-size: 42px;
+        }
+        
+        .header p {
+            margin-top: 0;
+        }
+
+        .back-button {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            display: flex;
+            align-items: center;
+            text-decoration: none;
+            color: #000;
+            font-size: 20px;
+            padding: 8px;
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.9);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+            z-index: 1000;
+        }
+
+        .back-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            background: #fff;
+        }
+
+        #victory-screen {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .victory-content {
+            background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+            padding: 40px;
+            border-radius: 20px;
+            text-align: center;
+            animation: popup 0.5s ease-out;
+            max-width: 500px;
+            width: 90%;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        .victory-content h2 {
+            color: #2c3e50;
+            font-size: 36px;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .victory-content p {
+            color: #666;
+            font-size: 20px;
+            margin-bottom: 30px;
+            line-height: 1.5;
+        }
+
+        .victory-buttons {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+        }
+        
+        .game-button {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            font-size: 1rem;
+            text-decoration: none;
+            display: inline-block;
+        }
+        
+        .play-again {
+            background-color: var(--secondary-color);
+        }
+        
+        @keyframes popup {
+            0% { transform: scale(0.8); opacity: 0; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+        
+        .levels-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 15px;
+            width: 100%;
+            max-width: 1000px;
+        }
+        
+        .level-button {
+            padding: 8px 12px;
+            border: 2px solid #ddd;
+            border-radius: var(--border-radius);
+            background-color: white;
+            cursor: pointer;
+            transition: all 0.3s;
+            flex: 0 0 auto;
+            min-width: 100px;
+            text-align: center;
+        }
+        
+        .level-button:hover {
+            border-color: var(--primary-color);
+        }
+        
+        .level-button.active {
+            border-color: var(--primary-color);
+            background-color: rgba(76, 175, 80, 0.1);
+        }
+        
+        .level-button.completed {
+            border-color: var(--success-color);
+            background-color: rgba(76, 175, 80, 0.2);
+        }
+        
+        .level-title {
+            font-weight: bold;
+            font-size: 1.1rem;
+            margin-bottom: 3px;
+            color: #333;
+        }
+        
+        .level-subtitle {
+            font-size: 0.9rem;
+            color: #666;
+        }
+        
+        .game-container {
+            background-color: white;
+            border-radius: var(--border-radius);
+            padding: 15px;
+            width: 100%;
+            max-width: 800px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .level-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-bottom: 8px;
+            border-bottom: 1px solid #eee;
+            margin-bottom: 15px;
+        }
+        
+        .level-name {
+            font-size: 1.4rem;
+            font-weight: bold;
+            color: var(--primary-color);
+        }
+        
+        .reset-button {
+            background-color: #f44336;
+            color: white;
+            border: none;
+            padding: 6px 12px;
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            font-size: 0.85rem;
+        }
+        
+        .game-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+        
+        .left-column {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        
+        .right-column {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        
+        .vehicle-container {
+            position: relative;
+            width: 100%;
+            height: 150px;
+            background-color: #f9f9f9;
+            border-radius: var(--border-radius);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+        
+        .vehicle-image {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+        }
+        
+        .description {
+            background-color: rgba(240, 248, 255, 0.9);
+            padding: 12px;
+            border-radius: var(--border-radius);
+            border-left: 4px solid var(--secondary-color);
+        }
+        
+        .hint-container {
+            background-color: rgba(255, 249, 196, 0.7);
+            padding: 10px;
+            border-radius: var(--border-radius);
+            display: none;
+        }
+        
+        .hint-container.active {
+            display: block;
+            animation: fadeIn 0.5s;
+        }
+        
+        .hint-icon {
+            margin-right: 5px;
+            color: #FBC02D;
+        }
+        
+        .fuels-container {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+        }
+        
+        .fuel-button {
+            background-color: white;
+            border: 2px solid #ddd;
+            border-radius: var(--border-radius);
+            padding: 10px;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-align: center;
+        }
+        
+        .fuel-button:hover {
+            border-color: var(--primary-color);
+        }
+        
+        .fuel-button.correct {
+            border-color: var(--success-color);
+            background-color: rgba(76, 175, 80, 0.1);
+        }
+        
+        .fuel-button.incorrect {
+            border-color: var(--error-color);
+            background-color: rgba(244, 67, 54, 0.1);
+        }
+        
+        .controls {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            align-items: center;
+            margin-top: 10px;
+            grid-column: span 2;
+        }
+        
+        .result-message {
+            padding: 10px;
+            border-radius: var(--border-radius);
+            text-align: center;
+            font-weight: bold;
+            opacity: 0;
+            transition: opacity 0.3s;
+            margin-bottom: 0;
+        }
+        
+        .result-message.success {
+            background-color: rgba(76, 175, 80, 0.2);
+            color: var(--success-color);
+            opacity: 1;
+        }
+        
+        .result-message.error {
+            background-color: rgba(244, 67, 54, 0.2);
+            color: var(--error-color);
+            opacity: 1;
+        }
+        
+        .buttons-row {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .show-hint-button {
+            background-color: #FBC02D;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            font-size: 1.1rem;
+        }
+        
+        .next-level-button {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            font-size: 1.1rem;
+            display: none;
+        }
+        
+        .next-level-button.active {
+            display: block;
+            animation: fadeIn 0.5s;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        @media (max-width: 768px) {
+            .game-content {
+                grid-template-columns: 1fr;
+            }
+            
+            .fuels-container {
+                grid-template-columns: 1fr;
+            }
+            
+            .controls {
+                grid-column: span 1;
+            }
+        }
+    </style>
+</head>
+<body>
+    <a href="index.html" class="back-button">
+        <span>↩ На головну</span>
+    </a>
+
+    <div class="header">
+        <h1>Заправка транспорту</h1>
+        <p>Оберіть правильне паливо для кожного виду транспорту</p>
+    </div>
+    
+    <div class="levels-container" id="levelsContainer">
+        <!-- Рівні будуть динамічно згенеровані тут -->
+    </div>
+    
+    <div class="game-container" id="gameContainer">
+        <div class="level-info">
+            <div class="level-name" id="currentLevelName">Рівень 1: Легкове авто</div>
+            <button class="reset-button" id="resetButton">Спробувати знову</button>
+        </div>
+        
+        <div class="game-content">
+            <div class="left-column">
+                <div class="vehicle-container">
+                    <img id="vehicleImage" class="vehicle-image" src="" alt="Транспортний засіб">
+                </div>
+                
+                <div class="description" id="vehicleDescription">
+                    Це стандартний міський автомобіль, який використовує найпоширеніше паливо.
+                </div>
+                
+                <div class="hint-container" id="hintContainer">
+                    <span class="hint-icon">💡</span>
+                    <span id="hintText">Це найпоширеніший вид транспорту. Майже всі такі автомобілі використовують один тип бензину.</span>
+                </div>
+            </div>
+            
+            <div class="right-column">
+                <div class="fuels-container" id="fuelsContainer">
+                    <!-- Варіанти палива будуть динамічно згенеровані тут -->
+                </div>
+            </div>
+            
+            <div class="controls">
+                <div class="result-message" id="resultMessage"></div>
+                
+                <div class="buttons-row">
+                    <button class="show-hint-button" id="showHintButton">Показати підказку</button>
+                    <button class="next-level-button" id="nextLevelButton">Наступний рівень</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div id="victory-screen">
+        <div class="victory-content">
+            <h2>🎉 Вітаємо! 🎉</h2>
+            <p>Ви успішно пройшли всі рівні та навчилися правильно заправляти різні види транспорту!</p>
+            <div class="victory-buttons">
+                <button class="game-button play-again" onclick="location.reload()">
+                    🔄 Грати знову
+                </button>
+                <a href="index.html" class="game-button return-home">
+                    🏠 На головну
+                </a>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Дані гри
+            const levels = [
+                {
+                    id: 1,
+                    name: "Легкове авто",
+                    description: "Це стандартний міський автомобіль, який використовує найпоширеніше паливо.",
+                    hint: "Октанове число цього палива -  95 одиниць",
+                    correctFuel: "Бензин А-95",
+                    image: "img/typical-car.jpg",
+                    completed: false
+                },
+                {
+                    id: 2,
+                    name: "Спортивний автомобіль",
+                    description: "Октанове число цього палива - 98 одиниць",
+                    hint: "Чим потужніший двигун, тим якісніше паливо потрібно.",
+                    correctFuel: "Бензин А-98",
+                    image: "img/sport car.jpg",
+                    completed: false
+                },
+                {
+                    id: 3,
+                    name: "Вантажівка",
+                    description: "Ця вантажівка перевозить десятки тонн вантажу. Їй потрібне паливо з додатковими присадками для потужності.",
+                    hint: "Це паливо має підвищене цетанове число.",
+                    correctFuel: "ДП-Pulls",
+                    image: "img/lorry.jfif",
+                    completed: false
+                },
+                {
+                    id: 4,
+                    name: "Трактор",
+                    description: "Цей транспорт використовується в полі для обробки ґрунту. Він має працювати безперебійно цілий день.",
+                    hint: "Це паливо має знижений вміст сірки.",
+                    correctFuel: "ДП-Євро",
+                    image: "img/tractor.jpg",
+                    completed: false
+                },
+                {
+                    id: 5,
+                    name: "Пасажирський літак",
+                    description: "Цей транспортний засіб здіймається в небо і долає тисячі кілометрів за лічені години.",
+                    hint: "Тільки один вид транспорту в цьому списку здатний літати. А значить, йому потрібне спеціальне авіаційне паливо.",
+                    correctFuel: "ТС-1",
+                    image: "img/plane",
+                    completed: false
+                },
+                {
+                    id: 6,
+                    name: "Водневий автомобіль",
+                    description: "Цей тип транспорту майже не створює шуму і викидає лише воду.",
+                    hint: "Якщо у вихлопній трубі лише вода – це особливий тип пального.",
+                    correctFuel: "Гідроген",
+                    image: "img/water car.jpg",
+                    completed: false
+                },
+                {
+                    id: 7,
+                    name: "Електромобіль",
+                    description: "Цей автомобіль не має двигуна внутрішнього згоряння. Його потрібно заряджати.",
+                    hint: "Цей вид транспорту взагалі не використовує рідке паливо.",
+                    correctFuel: "Електроенергія",
+                    image: "img/electro car.jpg",
+                    completed: false
+                }
+            ];
+            
+            const fuels = [
+                "Бензин А-95",
+                "Бензин А-98",
+                "ДП-Pulls",
+                "ДП-Євро",
+                "ТС-1",
+                "Гідроген",
+                "Електроенергія"
+            ];
+            
+            // DOM елементи
+            const levelsContainer = document.getElementById('levelsContainer');
+            const currentLevelName = document.getElementById('currentLevelName');
+            const vehicleDescription = document.getElementById('vehicleDescription');
+            const vehicleImage = document.getElementById('vehicleImage');
+            const hintContainer = document.getElementById('hintContainer');
+            const hintText = document.getElementById('hintText');
+            const fuelsContainer = document.getElementById('fuelsContainer');
+            const showHintButton = document.getElementById('showHintButton');
+            const resultMessage = document.getElementById('resultMessage');
+            const resetButton = document.getElementById('resetButton');
+            const nextLevelButton = document.getElementById('nextLevelButton');
+            const victoryScreen = document.getElementById('victory-screen');
+            
+            // Стан гри
+            let currentLevel = 1;
+            let hintsShown = {};
+            
+            // Функція для перемішування масиву (алгоритм Фішера-Єйтса)
+            function shuffleArray(array) {
+                const newArray = [...array];
+                for (let i = newArray.length - 1; i > 0; i--) {
+                    const j = Math.floor(Math.random() * (i + 1));
+                    [newArray[i], newArray[j]] = [newArray[j], newArray[i]];
+                }
+                return newArray;
+            }
+            
+            // Ініціалізація гри
+            function initGame() {
+                renderLevelButtons();
+                loadLevel(currentLevel);
+                
+                // Event listeners
+                showHintButton.addEventListener('click', showHint);
+                resetButton.addEventListener('click', resetLevel);
+                nextLevelButton.addEventListener('click', goToNextLevel);
+            }
+            
+            // Рендер кнопок рівнів
+            function renderLevelButtons() {
+                levelsContainer.innerHTML = '';
+                
+                levels.forEach(level => {
+                    const levelButton = document.createElement('div');
+                    levelButton.className = `level-button ${level.id === currentLevel ? 'active' : ''} ${level.completed ? 'completed' : ''}`;
+                    levelButton.dataset.level = level.id;
+                    
+                    levelButton.innerHTML = `
+                        <div class="level-title">Рівень ${level.id}</div>
+                        <div class="level-subtitle">${level.name}</div>
+                    `;
+                    
+                    levelButton.addEventListener('click', () => {
+                        loadLevel(level.id);
+                    });
+                    
+                    levelsContainer.appendChild(levelButton);
+                });
+            }
+            
+            // Завантаження конкретного рівня
+            function loadLevel(levelId) {
+                // Оновлення поточного рівня
+                currentLevel = levelId;
+                
+                // Пошук даних рівня
+                const level = levels.find(l => l.id === levelId);
+                
+                // Оновлення UI
+                currentLevelName.textContent = `Рівень ${level.id}: ${level.name}`;
+                vehicleDescription.textContent = level.description;
+                vehicleImage.src = level.image;
+                vehicleImage.alt = level.name;
+                hintText.textContent = level.hint;
+                resultMessage.className = 'result-message';
+                resultMessage.textContent = '';
+                
+                // Оновлення кнопок рівнів
+                document.querySelectorAll('.level-button').forEach(btn => {
+                    btn.classList.remove('active');
+                    if (parseInt(btn.dataset.level) === levelId) {
+                        btn.classList.add('active');
+                    }
+                });
+                
+                // Скидання підказки
+                hintContainer.classList.remove('active');
+                
+                // Скидання кнопки наступного рівня
+                nextLevelButton.classList.remove('active');
+                
+                // Генерація варіантів палива у випадковому порядку
+                renderFuelOptions(level);
+            }
+            
+            // Рендер варіантів палива
+            function renderFuelOptions(level) {
+                fuelsContainer.innerHTML = '';
+                
+                // Перемішуємо порядок палива, залишаючи правильну відповідь
+                const shuffledFuels = shuffleArray(fuels);
+                
+                shuffledFuels.forEach(fuel => {
+                    const fuelButton = document.createElement('div');
+                    fuelButton.className = 'fuel-button';
+                    fuelButton.textContent = fuel;
+                    
+                    fuelButton.addEventListener('click', () => {
+                        checkAnswer(fuel, level);
+                    });
+                    
+                    fuelsContainer.appendChild(fuelButton);
+                });
+            }
+            
+            // Перевірка правильності обраного палива
+            function checkAnswer(selectedFuel, level) {
+                // Видалення попередніх класів
+                document.querySelectorAll('.fuel-button').forEach(btn => {
+                    btn.classList.remove('correct', 'incorrect');
+                });
+                
+                // Отримання обраної кнопки
+                const selectedButton = Array.from(document.querySelectorAll('.fuel-button'))
+                    .find(btn => btn.textContent === selectedFuel);
+                
+                if (selectedFuel === level.correctFuel) {
+                    // Правильна відповідь
+                    selectedButton.classList.add('correct');
+                    resultMessage.className = 'result-message success';
+                    resultMessage.textContent = 'Правильно! Ви обрали вірне паливо.';
+                    
+                    // Позначення рівня як завершеного
+                    const levelIndex = levels.findIndex(l => l.id === level.id);
+                    levels[levelIndex].completed = true;
+                    
+                    // Оновлення кнопки рівня
+                    const levelButton = document.querySelector(`.level-button[data-level="${level.id}"]`);
+                    levelButton.classList.add('completed');
+                    
+                    // Показати кнопку наступного рівня, якщо це не останній рівень
+                    if (level.id < levels.length) {
+                        nextLevelButton.classList.add('active');
+                    } else {
+                        // Якщо це останній рівень, перевіряємо чи пройдені всі рівні
+                        const allLevelsCompleted = levels.every(l => l.completed);
+                        if (allLevelsCompleted) {
+                            setTimeout(() => {
+                                showVictoryScreen();
+                            }, 1500);
+                        }
+                    }
+                } else {
+                    // Неправильна відповідь
+                    selectedButton.classList.add('incorrect');
+                    resultMessage.className = 'result-message error';
+                    resultMessage.textContent = 'Неправильно! Спробуйте інший вид палива.';
+                }
+            }
+            
+            // Показати підказку
+            function showHint() {
+                hintContainer.classList.add('active');
+                hintsShown[currentLevel] = true;
+            }
+            
+            // Скинути поточний рівень
+            function resetLevel() {
+                loadLevel(currentLevel);
+            }
+            
+            // Перейти до наступного рівня
+            function goToNextLevel() {
+                if (currentLevel < levels.length) {
+                    loadLevel(currentLevel + 1);
+                }
+            }
+            
+            // Показати екран перемоги
+            function showVictoryScreen() {
+                victoryScreen.style.display = 'flex';
+            }
+            
+            // Ініціалізація гри
+            initGame();
+        });
+    </script>
+</body>
+</html>
